@@ -32,7 +32,7 @@ let posiScore = 0
 let negScore = 0
 let posiIndex = 0
 let negIndex = 0
-let timeRemain = '-'
+let timeRemain = 'サーバ起動'
 
 
 io.on("connection", (socket) =>{
@@ -41,51 +41,29 @@ io.on("connection", (socket) =>{
     socket.on("send_start", (data)=>{
 
         const gameStartCount = async () =>{
-            timeRemain = 10
-            socket.emit('time_remain', timeRemain);
+            // socket.emit("time_remain", '10');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '9');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '8');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '7');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '6');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '5');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '4');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("time_remain", '3');
+            // await new Promise(s => setTimeout(s, 1000))
+            socket.emit("time_remain", '2');
             await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 9
-            socket.emit('time_remain', timeRemain);
+            socket.emit("time_remain", '1');
             await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 8
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 7
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 6
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 5
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 4
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 3
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 2
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 1
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 'Start'
-            socket.emit('time_remain', timeRemain);
+            socket.emit("time_remain", 'START');
             await new Promise(s => setTimeout(s, 1000))
             isGameActive = true
-
-            for (let time = 10; time >= 0; time--) {
-                timeRemain = time
-                socket.emit("time_remain", time);
-                console.log(timeRemain)
-                await new Promise(s => setTimeout(s, 1000))
-            }
-            isGameActive = false
-            posiIndex = 0
-            negIndex = 0
-            timeRemain = '終了です'
         }
         gameStartCount()
         

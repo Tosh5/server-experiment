@@ -26,14 +26,8 @@ for (var i = 0; i < index_bin_size; i++){
 }
 
 
-// let total_bin = 0
-let isGameActive = false // 管理画面にてStartシグナルが出てから制限時間が残っている間のみTrue
-let posiScore = 0
-let negScore = 0
-let posiIndex = 0
-let negIndex = 0
-let timeRemain = '-'
-
+let total_bin = 0
+let isGameActive = false
 
 io.on("connection", (socket) =>{
     console.log(`User Connected: ${socket.id}`)
@@ -41,51 +35,29 @@ io.on("connection", (socket) =>{
     socket.on("send_start", (data)=>{
 
         const gameStartCount = async () =>{
-            timeRemain = 10
-            socket.emit('time_remain', timeRemain);
+            // socket.emit("total_index", '10');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '9');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '8');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '7');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '6');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '5');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '4');
+            // await new Promise(s => setTimeout(s, 1000))
+            // socket.emit("total_index", '3');
+            // await new Promise(s => setTimeout(s, 1000))
+            socket.emit("total_index", '2');
             await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 9
-            socket.emit('time_remain', timeRemain);
+            socket.emit("total_index", '1');
             await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 8
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 7
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 6
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 5
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 4
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 3
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 2
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 1
-            socket.emit('time_remain', timeRemain);
-            await new Promise(s => setTimeout(s, 1000))
-            timeRemain = 'Start'
-            socket.emit('time_remain', timeRemain);
+            socket.emit("total_index", 'START');
             await new Promise(s => setTimeout(s, 1000))
             isGameActive = true
-
-            for (let time = 10; time >= 0; time--) {
-                timeRemain = time
-                socket.emit("time_remain", time);
-                console.log(timeRemain)
-                await new Promise(s => setTimeout(s, 1000))
-            }
-            isGameActive = false
-            posiIndex = 0
-            negIndex = 0
-            timeRemain = '終了です'
         }
         gameStartCount()
         
@@ -97,9 +69,9 @@ io.on("connection", (socket) =>{
             data = Number(data)
             posiIndex_bin.splice(0,1);
             posiIndex_bin.push(data)
-            // console.log(posiIndex_bin)
+            console.log(posiIndex_bin)
 
-            posiScore += data
+            total_bin += data
             let sum = 0;
     
             // 総和を取得
@@ -109,15 +81,13 @@ io.on("connection", (socket) =>{
             console.log(`sum is: ${sum}`)
             let preGeneIndex = sum / posiIndex_bin.length
 
-            // console.log(preGeneIndex)
+            console.log(preGeneIndex)
             let geneIndex = Math.round(preGeneIndex)
-
-            posiIndex = geneIndex
 
             console.log(`posi_index ${geneIndex}`)
 
-            socket.emit("posi_index", posiIndex);
-            socket.emit("posi_score", Math.round(posiScore/1000));
+            socket.emit("posi_index", geneIndex);
+            socket.emit("posi_score", Math.round(total_bin/1000));
         }else{
             socket.emit("gene_index", '終了')
         }
@@ -130,9 +100,9 @@ io.on("connection", (socket) =>{
             data = Number(data)
             negIndex_bin.splice(0,1);
             negIndex_bin.push(data)
-            // console.log(negIndex_bin)
+            console.log(negIndex_bin)
 
-            negScore += data
+            total_bin += data
             let sum = 0;
     
             // 総和を取得
@@ -142,73 +112,15 @@ io.on("connection", (socket) =>{
             console.log(`sum is: ${sum}`)
             let preGeneIndex = sum / negIndex_bin.length
 
-            // console.log(preGeneIndex)
+            console.log(preGeneIndex)
             let geneIndex = Math.round(preGeneIndex)
 
-            negIndex = geneIndex
-            console.log(`negIndex : ${negIndex}`)
-
-            socket.emit("neg_index", negIndex);
-            socket.emit("neg_score", Math.round(negScore/1000));
+            socket.emit("neg_index", geneIndex);
+            socket.emit("neg_score", Math.round(total_bin/1000));
         }else{
             socket.emit("gene_index", '終了')
         }
     })
-
-    socket.on("receive_params", (data)=>{
-        socket.emit("neg_index", negIndex);
-        socket.emit("neg_score", Math.round(negScore/1000));
-        socket.emit("posi_index", posiIndex);
-        socket.emit("posi_score", Math.round(posiScore/1000));
-        socket.emit('time_remain', timeRemain);
-    })
-
-    // let time_remain = 120
-
-    // for (let time = 400; time >= 0; time--) {
-    //     time_remain = time
-    //     socket.emit("time_remain", time);
-
-    //     const sendingParams = async () =>{
-    //         socket.emit("neg_index", negIndex);
-    //         socket.emit("neg_score", Math.round(negScore/1000));
-    //         socket.emit("posi_index", posiIndex);
-    //         socket.emit("posi_score", Math.round(posiScore/1000));
-    //         await new Promise(s => setTimeout(s, 1000))
-    //     }
-
-    //     sendingParams()
-
-        
-
-    //     console.log(time_remain)
-    //     new Promise(s => setTimeout(s, 1000))  // await new Promise(s => setTimeout(s, 1000))
-    // }
-
-
-
-    // const sendingParams = async () =>{
-    //     socket.emit("neg_index", negIndex);
-    //     socket.emit("neg_score", Math.round(negScore/1000));
-    //     socket.emit("posi_index", posiIndex);
-    //     socket.emit("posi_score", Math.round(posiScore/1000));
-    //     await new Promise(s => setTimeout(s, 100))
-    //     console.log(`infinite loop negIndex: ーーーーーーーーーーーーーーーーーーー ${negIndex}`)
-    // }
-
-    // sendingParams()
-
-
-    // const gameStartCount = async () =>{
-    //     socket.emit("total_index", '2');
-    //     await new Promise(s => setTimeout(s, 1000))
-    //     socket.emit("total_index", '1');
-    //     await new Promise(s => setTimeout(s, 1000))
-    //     socket.emit("total_index", 'START');
-    //     await new Promise(s => setTimeout(s, 1000))
-    //     isGameActive = true
-    // }
-    // gameStartCount()
 
     
     
