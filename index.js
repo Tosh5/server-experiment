@@ -163,6 +163,23 @@ io.on("connection", (socket) =>{
         socket.emit('time_remain', timeRemain);
     })
 
+    socket.on('reset_params' ,(data)=>{
+        negIndex = 0,
+        posiIndex = 0,
+        posiScore = 0,
+        negScore = 0,
+        isGameActive = false,
+        timeRemain = '-'
+    
+    })
+
+//     let isGameActive = false // 管理画面にてStartシグナルが出てから制限時間が残っている間のみTrue
+// let posiScore = 0
+// let negScore = 0
+// let posiIndex = 0
+// let negIndex = 0
+// let timeRemain = '-'
+
     // let time_remain = 120
 
     // for (let time = 400; time >= 0; time--) {
