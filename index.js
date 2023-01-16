@@ -76,7 +76,7 @@ io.on("connection", (socket) =>{
             await new Promise(s => setTimeout(s, 1000))
             isGameActive = true
 
-            for (let time = 10; time >= 0; time--) {
+            for (let time = 120; time >= 0; time--) {
                 timeRemain = time
                 socket.emit("time_remain", time);
                 console.log(timeRemain)
@@ -127,7 +127,7 @@ io.on("connection", (socket) =>{
 
     socket.on("send_myNegIndex", (data)=>{
         if (isGameActive){
-            data = Number(data)
+            data = Number(data) * 0.8
             negIndex_bin.splice(0,1);
             negIndex_bin.push(data)
             // console.log(negIndex_bin)
