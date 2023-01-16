@@ -76,7 +76,7 @@ io.on("connection", (socket) =>{
             await new Promise(s => setTimeout(s, 1000))
             isGameActive = true
 
-            for (let time = 120; time >= 0; time--) {
+            for (let time = 60; time >= 0; time--) {
                 timeRemain = time
                 socket.emit("time_remain", time);
                 console.log(timeRemain)
@@ -170,7 +170,6 @@ io.on("connection", (socket) =>{
         negScore = 0,
         isGameActive = false,
         timeRemain = '-'
-    
     })
 })
 
