@@ -181,22 +181,21 @@ app.get('/', (req, res) => {
     res.send('This is home directory of 玉入れサーバ。玉入れかごロボットの移動速度（0~10の11段階）を取得するには、~/speed のエンドポイントに接続すること。')
 })
 
-// let speed = 0
-// let balance = (negIndex - posiIndex)/20 + 5 // ブーイングと応援のバランス
-// if(balance >= 10){
-//     balance = 10
-// }
-// if(balance <= 0){
-//     balance = 0
-// }
-// balance = int(balance)
+let speed = (negIndex - posiIndex)/20 + 5 // ブーイングと応援のバランス
+if(speed >= 10){
+    speed = 10
+}
+if(speed <= 0){
+    speed = 0
+}
+speed = Math.floor(speed)
 
 
 
 app.get('/speed', (req, res) => {
-    res.send(negIndex/posiIndex)
+    res.send(`${speed}`)
 })
 
-app.get('/speed2', (req, res) => {
-    res.send(`${negIndex/posiIndex}`)
-})
+// app.get('/speed2', (req, res) => {
+//     res.send(`${negIndex/posiIndex}`)
+// })
