@@ -176,3 +176,7 @@ io.on("connection", (socket) =>{
 server.listen(process.env.PORT || 8000, () =>{
     console.log('server started')
 })
+
+app.get('/', (req, res) => {
+    res.send('hello world')
+  })
