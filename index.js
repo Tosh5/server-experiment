@@ -178,5 +178,9 @@ server.listen(process.env.PORT || 8000, () =>{
 })
 
 app.get('/', (req, res) => {
-    res.send('hello world')
-  })
+    res.send('This is home directory of 玉入れサーバ。玉入れかごロボットの移動速度（0~10の11段階）を取得するには、~/speed のエンドポイントに接続すること。')
+})
+
+app.get('/speed', (req, res) => {
+    res.send(negIndex/posiIndex)
+})
