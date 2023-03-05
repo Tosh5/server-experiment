@@ -25,7 +25,6 @@ for (var i = 0; i < index_bin_size; i++){
     negIndex_bin[i] = 0;  // 0 で初期化
 }
 
-
 // let total_bin = 0
 let isGameActive = false // 管理画面にてStartシグナルが出てから制限時間が残っている間のみTrue
 let posiScore = 0
@@ -33,12 +32,14 @@ let negScore = 0
 let posiIndex = 0
 let negIndex = 0
 let timeRemain = '-'
+let resetRequested = false
 
 
 io.on("connection", (socket) =>{
     console.log(`User Connected: ${socket.id}`)
 
     socket.on("send_start", (data)=>{
+        resetRequested = false
 
         const gameStartCount = async () =>{
             timeRemain = 10
@@ -80,6 +81,9 @@ io.on("connection", (socket) =>{
                 timeRemain = time
                 socket.emit("time_remain", time);
                 console.log(timeRemain)
+                if(resetRequested){
+                    break
+                }
                 await new Promise(s => setTimeout(s, 1000))
             }
             isGameActive = false
@@ -161,6 +165,21 @@ io.on("connection", (socket) =>{
         socket.emit("posi_index", posiIndex);
         socket.emit("posi_score", Math.round(posiScore/1000));
         socket.emit('time_remain', timeRemain);
+
+        let calcSpeed = (negIndex - posiIndex)/20 + 5 // ブーイングと応援のバランス
+        if(calcSpeed >= 9){
+            calcSpeed = 9
+        }
+        if(calcSpeed <= 0){
+            calcSpeed = 0
+        }
+        calcSpeed = Math.floor(calcSpeed)
+        if(isGameActive){
+            socket.emit('speed', calcSpeed);
+        }else{
+            socket.emit('speed', 0);
+        }
+        
     })
 
     socket.on('reset_params' ,(data)=>{
@@ -169,6 +188,7 @@ io.on("connection", (socket) =>{
         posiScore = 0,
         negScore = 0,
         isGameActive = false,
+        resetRequested = true,
         timeRemain = '-'
     })
 })
@@ -178,24 +198,5 @@ server.listen(process.env.PORT || 8000, () =>{
 })
 
 app.get('/', (req, res) => {
-    res.send('This is home directory of 玉入れサーバ。玉入れかごロボットの移動速度（0~10の11段階）を取得するには、~/speed のエンドポイントに接続すること。')
+    res.send('クライアントとサーバの間のすべてのやり取りは、WebSocket通信で行われています。')
 })
-
-let speed = (negIndex - posiIndex)/20 + 5 // ブーイングと応援のバランス
-if(speed >= 10){
-    speed = 10
-}
-if(speed <= 0){
-    speed = 0
-}
-speed = Math.floor(speed)
-
-
-
-app.get('/speed', (req, res) => {
-    res.send(`${speed}`)
-})
-
-// app.get('/speed2', (req, res) => {
-//     res.send(`${negIndex/posiIndex}`)
-// })
